@@ -1,8 +1,6 @@
 // server.js
-const cors = require("cors");
-app.use(cors());
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors"); // ✅ only once
 const fetch = require("node-fetch");
 const archiver = require("archiver");
 const fs = require("fs");
