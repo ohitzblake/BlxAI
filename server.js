@@ -1,5 +1,6 @@
 // server.js
 const express = require("express");
+const cors = require("cors");
 const fetch = require("node-fetch");
 const archiver = require("archiver");
 const fs = require("fs");
@@ -7,7 +8,9 @@ const path = require("path");
 const os = require("os");
 
 const app = express();
+app.use(cors()); // ✅ enable CORS
 app.use(express.json({ limit: "1mb" }));
+
 const PORT = process.env.PORT || 3000;
 
 // --- Call DeepSeek Chat API ---
@@ -16,7 +19,7 @@ async function callDeepSeek(prompt) {
   if (!key) throw new Error("DEEPSEEK_API_KEY not set in environment");
 
   const body = {
-    model: "deepseek-chat", // use "deepseek-coder" if you want coding focus
+    model: "deepseek-chat", // use "deepseek-coder" for coding focus
     messages: [{ role: "user", content: prompt }],
     max_tokens: 1200,
   };
@@ -59,13 +62,12 @@ app.post("/api/chat", async (req, res) => {
       });
 
       const id = path.basename(tmpDir);
-      const servePath = `/files/${id}.zip`;
       const filesDir = path.join(__dirname, "files");
       if (!fs.existsSync(filesDir)) fs.mkdirSync(filesDir);
       const finalPath = path.join(filesDir, id + ".zip");
       fs.copyFileSync(zipPath, finalPath);
 
-      const downloadUrl = `${req.protocol}://${req.get("host")}${servePath}`;
+      const downloadUrl = `${req.protocol}://${req.get("host")}/files/${id}.zip`;
       return res.json({ reply, downloadUrl });
     }
 
