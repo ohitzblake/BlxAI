@@ -1,6 +1,6 @@
 // server.js
 const express = require("express");
-const cors = require("cors"); // ✅ only once
+const cors = require("cors");
 const fetch = require("node-fetch");
 const archiver = require("archiver");
 const fs = require("fs");
@@ -8,15 +8,15 @@ const path = require("path");
 const os = require("os");
 
 const app = express();
-app.use(cors()); // ✅ enable CORS
+app.use(cors()); // enable CORS
 app.use(express.json({ limit: "1mb" }));
 
 const PORT = process.env.PORT || 3000;
 
 // --- Call DeepSeek Chat API ---
 async function callDeepSeek(prompt) {
-  const key = process.env.DEEPSEEK_API_KEY;
-  if (!key) throw new Error("DEEPSEEK_API_KEY not set in environment");
+  const key = "8IAT10XMST3KBX5Y"; // HARD-CODED KEY FOR TESTING
+  if (!key) throw new Error("DEEPSEEK_API_KEY not set");
 
   const body = {
     model: "deepseek-chat", // use "deepseek-coder" for coding focus
